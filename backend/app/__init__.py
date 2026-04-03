@@ -1,18 +1,24 @@
+import os
+
+from dotenv import load_dotenv
 from flask import Flask
 from flask_cors import CORS
 from sqlalchemy import inspect, text
+
 from .database import db
-from .routes.products import products_bp
 from .routes.categories import categories_bp
 from .routes.dashboard import dashboard_bp
+from .routes.products import products_bp
+
+load_dotenv()
 
 
 def create_app():
     app = Flask(__name__)
-    app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///inventory.db'
+    app.config['SQLALCHEMY_DATABASE_URI'] = _get_database_uri()
     app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-    CORS(app)
+    CORS(app, resources={r'/api/*': {'origins': _get_cors_origins()}})
     db.init_app(app)
 
     app.register_blueprint(products_bp, url_prefix='/api/products')
@@ -22,9 +28,31 @@ def create_app():
     with app.app_context():
         db.create_all()
         _ensure_schema()
-        _seed_data()
+        if _should_seed_data():
+            _seed_data()
 
     return app
+
+
+def _get_database_uri():
+    database_url = os.getenv('DATABASE_URL', '').strip()
+    if not database_url:
+        return 'sqlite:///inventory.db'
+
+    if database_url.startswith('postgres://'):
+        return database_url.replace('postgres://', 'postgresql+psycopg://', 1)
+    if database_url.startswith('postgresql://'):
+        return database_url.replace('postgresql://', 'postgresql+psycopg://', 1)
+    return database_url
+
+
+def _get_cors_origins():
+    origins = [origin.strip() for origin in os.getenv('CORS_ORIGINS', '*').split(',') if origin.strip()]
+    return origins or '*'
+
+
+def _should_seed_data():
+    return os.getenv('SEED_DATA', 'true').strip().lower() in {'1', 'true', 'yes', 'on'}
 
 
 def _seed_data():
@@ -61,6 +89,9 @@ def _seed_data():
 
 def _ensure_schema():
     inspector = inspect(db.engine)
+    if 'products' not in inspector.get_table_names():
+        return
+
     product_columns = {column['name'] for column in inspector.get_columns('products')}
 
     if 'tags_json' not in product_columns:

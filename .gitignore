@@ -1,0 +1,5 @@
+.vercel/
+backend/server.err.log
+backend/server.out.log
+frontend/vite.err.log
+frontend/vite.out.log
