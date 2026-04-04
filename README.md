@@ -1,48 +1,24 @@
 # Inventory Hub
 
-## Features
+Inventory Hub is now a frontend-only React/Vite application. All inventory data is stored in the browser with `localStorage`, including seeded sample data, products, categories, dashboard stats, reports, barcode lookup, stock adjustments, bulk tags, and duplicate checks.
 
-### Dashboard
+## Start
 
-- Total products and categories overview
-- Low-stock and out-of-stock alerts
-- Total inventory value tracking
-- Category breakdown charts
-- Recently added products
+```powershell
+cd frontend
+npm install
+npm run dev
+```
 
-### Product Management
+## Build
 
-- Create, update, and delete products
-- Fields: SKU, barcode, quantity, price, threshold, description
-- Instant barcode lookup
-- Stock adjustment (increase or decrease)
+```powershell
+cd frontend
+npm run build
+```
 
-### Search, Filter and Sort
+## Notes
 
-- Search by name, SKU, barcode, category, and tags
-- Filter by status, category, tags, and price range
-- Sort by date, name, price, or quantity
-
-### Tags System
-
-- Add colored tags to products
-- Bulk tag assignment with append or replace modes
-
-### Categories
-
-- Create, update, and delete categories
-- Prevent deletion if products exist
-
-### Reports and Export
-
-- CSV export
-- Excel-compatible export
-- Printable reports
-- PDF-ready category summary
-- Low-stock report
-
-### Extra
-
-- Saved filter presets using local storage
-- Auto database creation and seed data
-- Duplicate protection for SKU, barcode, and category
+- No backend is required.
+- Data persists per browser through `localStorage`.
+- Clearing browser storage resets the app back to seeded sample data.

@@ -45,7 +45,7 @@ export default function Dashboard() {
         </div>
     )
 
-    if (!stats) return <div style={{ color: 'var(--danger)', padding: 20 }}>Failed to load dashboard. Is the backend running?</div>
+    if (!stats) return <div style={{ color: 'var(--danger)', padding: 20 }}>Failed to load dashboard data.</div>
 
     return (
         <div style={{ display: 'flex', flexDirection: 'column', gap: 28 }}>
