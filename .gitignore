@@ -1,4 +1,4 @@
 .vercel/
-instance/
+instance/*.db
 frontend/vite.err.log
 frontend/vite.out.log
